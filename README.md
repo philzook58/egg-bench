@@ -4,6 +4,8 @@ PLEASE SUBMIT MORE BENCHMARKS!!!
 
 ![](./egg_bench.jpg)
 
+Benchmarks can just be terms to be optimized in some reasonable machine or human readable presentation. Rules can be links to explicit tables, markdown files of rules, or things in SMTLIB or other existing formats.
+
 # Table of Contents
 
 - lambda - problems involving reducing and modelling lambda binders. Untyped Lambda calculus and others
