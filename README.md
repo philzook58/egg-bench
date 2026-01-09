@@ -16,23 +16,9 @@ Benchmarks can just be terms to be optimized in some reasonable machine or human
 - circuit
 - functional_prog
 
-# Comments
-
-The e-graph community needs benchmarks in a portable format to compare systems and techniques.
-
-For my purposes I have found SMTLIB the be very useful. SMTLIB can be imported and manipulated by Z3 in your language of choice.
-egglog is also rising in popularity.
-
-This repo has tools to translate between them (and any other formats which may be useful) and sets of problems.
-
-We need both theorem proving and optimization benchmarks.
-
-It would be cool to get this together enough to start holding egg-comp.
+# Links
 
 - <https://www.philipzucker.com/rewrite_rules/>
-
-Other competition to take inspiration and maybe problems from
-
 - SMT-COMP <https://smt-comp.github.io/>
 - SAT <https://satcompetition.github.io/>
 - CASC <https://tptp.org/CASC/>
