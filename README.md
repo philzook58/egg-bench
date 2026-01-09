@@ -4,6 +4,16 @@ PLEASE SUBMIT MORE BENCHMARKS!!!
 
 ![](./egg_bench.jpg)
 
+# Table of Contents
+
+- lambda - problems involving reducing and modelling lambda binders. Untyped Lambda calculus and others
+- polynomial
+- bitvec
+- circuit
+- functional_prog
+
+# Comments
+
 The e-graph community needs benchmarks in a portable format to compare systems and techniques.
 
 For my purposes I have found SMTLIB the be very useful. SMTLIB can be imported and manipulated by Z3 in your language of choice.
