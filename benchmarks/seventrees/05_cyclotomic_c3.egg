@@ -1,0 +1,31 @@
+; x = 3^2 + (3 + 1)x + x^2  ==>  x^4 = 3^3 x
+; Representative of x = c^2 + (c + 1)x + x^2  ==>  x^4 = c^3 x.
+
+(datatype Expr
+  (Zero)
+  (One)
+  (X)
+  (Add Expr Expr)
+  (Mul Expr Expr))
+
+(rewrite (Add (Zero) y) y)
+(birewrite (Add x y) (Add y x))
+(birewrite (Add x (Add y z)) (Add (Add x y) z))
+(rewrite (Mul x (One)) x)
+(rewrite (Mul x (Zero)) (Zero))
+(birewrite (Mul x y) (Mul y x))
+(birewrite (Mul x (Mul y z)) (Mul (Mul x y) z))
+(birewrite (Mul x (Add y z))
+           (Add (Mul x y) (Mul x z)))
+
+(let $two (Add (One) (One)))
+(let $three (Add $two (One)))
+(let $four (Add $three (One)))
+(let $nine (Mul $three $three))
+(let $twentyseven (Mul $three $nine))
+(let $x2 (Mul (X) (X)))
+(let $x4 (Mul $x2 $x2))
+
+(union (X) (Add $nine (Add (Mul $four (X)) $x2)))
+(run 30 :until (= $x4 (Mul $twentyseven (X))))
+(check (= $x4 (Mul $twentyseven (X))))

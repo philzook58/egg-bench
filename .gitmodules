@@ -1,0 +1,9 @@
+[submodule "benchmarks/MicroHs"]
+	path = benchmarks/MicroHs
+	url = https://github.com/augustss/MicroHs.git
+[submodule "eq-prog-opt"]
+	path = eq-prog-opt
+	url = https://github.com/mwillsey/eq-prog-opt
+[submodule "benchmarks/cfg/bril"]
+	path = benchmarks/cfg/bril
+	url = https://github.com/sampsyo/bril

@@ -1,0 +1,26 @@
+; x = 1 + 2x + x^2  ==>  x^4 = x
+
+(datatype Expr
+  (Zero)
+  (One)
+  (X)
+  (Add Expr Expr)
+  (Mul Expr Expr))
+
+(rewrite (Add (Zero) y) y)
+(birewrite (Add x y) (Add y x))
+(birewrite (Add x (Add y z)) (Add (Add x y) z))
+(rewrite (Mul x (One)) x)
+(rewrite (Mul x (Zero)) (Zero))
+(birewrite (Mul x y) (Mul y x))
+(birewrite (Mul x (Mul y z)) (Mul (Mul x y) z))
+(birewrite (Mul x (Add y z))
+           (Add (Mul x y) (Mul x z)))
+
+(let $x2 (Mul (X) (X)))
+(let $x4 (Mul $x2 $x2))
+(let $twox (Add (X) (X)))
+
+(union (X) (Add (One) (Add $twox $x2)))
+(run 15 :until (= $x4 (X)))
+(check (= $x4 (X)))

@@ -1,0 +1,30 @@
+; x = 2 + 3x + x^2  ==>  x^9 = 16x
+
+(datatype Expr
+  (Zero)
+  (One)
+  (X)
+  (Add Expr Expr)
+  (Mul Expr Expr))
+
+(rewrite (Add (Zero) y) y)
+(birewrite (Add x y) (Add y x))
+(birewrite (Add x (Add y z)) (Add (Add x y) z))
+(rewrite (Mul x (One)) x)
+(rewrite (Mul x (Zero)) (Zero))
+(birewrite (Mul x y) (Mul y x))
+(birewrite (Mul x (Mul y z)) (Mul (Mul x y) z))
+(birewrite (Mul x (Add y z))
+           (Add (Mul x y) (Mul x z)))
+
+(let $two (Add (One) (One)))
+(let $three (Add $two (One)))
+(let $four (Add $two $two))
+(let $sixteen (Mul $four $four))
+(let $x2 (Mul (X) (X)))
+(let $x3 (Mul (X) $x2))
+(let $x9 (Mul $x3 (Mul $x3 $x3)))
+
+(union (X) (Add $two (Add (Mul $three (X)) $x2)))
+(run 30 :until (= $x9 (Mul $sixteen (X))))
+(check (= $x9 (Mul $sixteen (X))))
