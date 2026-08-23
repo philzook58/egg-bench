@@ -1,0 +1,6 @@
+c Simple DIMACS CNF example.
+c (x1 or not x3) and (x2 or x3 or not x1) and (not x2)
+p cnf 3 3
+1 -3 0
+2 3 -1 0
+-2 0

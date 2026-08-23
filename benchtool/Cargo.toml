@@ -1,0 +1,12 @@
+[package]
+name = "benchtool"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.6.6", features = ["derive"] }
+dashu = "0.4.2"
+egglog = "3.0.0"
+eq-prog-opt = { path = "../eq-prog-opt" }
+tptp = "0.31.1"
+yaspar = "2.7.2"

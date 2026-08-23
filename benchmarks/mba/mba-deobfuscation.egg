@@ -1,0 +1,116 @@
+; Selected MBA deobfuscation benchmarks, expressed as Egglog Expr terms.
+;
+; Attribution:
+; - Simplifier patterns: mazeworks-security/Simplifier, GPL-3.0-or-later.
+;   https://github.com/mazeworks-security/Simplifier
+; - GAMBA Syntia/NeuReduce examples: DenuvoSoftwareSolutions/GAMBA,
+;   GPL-3.0.  The source pairs appear in experiments/datasets/{syntia,neureduce}.txt.
+;   https://github.com/DenuvoSoftwareSolutions/GAMBA
+;
+; Each $*-source and $*-target pair is a concrete, fixed-width bitvector
+; equality.  This file deliberately supplies syntax and instances only: add a
+; ruleset and (run ...) / (check (= $*-source $*-target)) for the solver being
+; compared.
+
+(datatype Expr
+  (Const i64)
+  (X) (Y) (Z) (A) (B) (C) (D) (E) (T) (C1)
+  (Add Expr Expr)
+  (Sub Expr Expr)
+  (Mul Expr Expr)
+  (Neg Expr)
+  (Not Expr)
+  (And Expr Expr)
+  (Or Expr Expr)
+  (Xor Expr Expr))
+
+; Simplifier/Mba.Simplifier/DSL/simplification.rules: linear_mba_1
+(let $simplifier-linear-1-source
+  (Add (Xor (Y) (Or (X) (And (Y) (Not (Z)))))
+       (Or (Xor (Z) (Xor (X) (Y))) (And (X) (Y)))))
+(let $simplifier-linear-1-target (Add (X) (Xor (X) (Or (Y) (Z)))))
+
+; Simplifier/Mba.Simplifier/DSL/simplification.rules: linear_mba_2
+(let $simplifier-linear-2-source
+  (Add (Mul (C1) (Xor (Z) (Not (Or (X) (And (Z) (Y))))))
+       (Mul (Neg (C1))
+            (Add (And (Z) (X)) (Or (Y) (Or (X) (Not (Z))))))))
+(let $simplifier-linear-2-target (Mul (Neg (C1)) (X)))
+
+; Simplifier/Mba.Simplifier/DSL/simplification.rules: mba_9
+(let $simplifier-mba-9-source
+  (Add (Add (A) (Mul (Const -2) (D)))
+       (Mul (Const 2) (And (Not (A)) (Mul (Const 2) (D))))))
+(let $simplifier-mba-9-target (Xor (A) (Mul (Const 2) (D))))
+
+; Simplifier/Mba.Simplifier/DSL/simplification.rules: combine_and_add_xor_or
+(let $simplifier-combine-source
+  (Add (Add (And (X) (Y)) (Xor (Z) (Or (X) (Y))))
+       (Mul (Const 2) (Or (Z) (Not (And (X) (Y)))))))
+(let $simplifier-combine-target
+  (Add (Const -2) (Xor (Xor (Z) (X)) (Y))))
+
+; Simplifier README semi-linear example (64-bit in its default invocation).
+(let $simplifier-semilinear-source
+  (Sub
+    (Add
+      (Add
+        (Add
+          (Mul (Const 7471873370) (Not (And (Const 16832296021645948) (Y))))
+          (Mul (Const 3735936685) (Const 16832296021645948)))
+        (Mul (Const 3735936685) (Y)))
+      (Const 7471922744))
+    (Const 49374)))
+(let $simplifier-semilinear-target
+  (Mul (Const 3735936685) (Xor (Const 16832296021645948) (Y))))
+
+; GAMBA experiments/datasets/syntia.txt, rows 2, 9, 13, and 15.
+(let $gamba-syntia-2-source
+  (Sub (Sub (C) (B))
+       (Add (Or (C) (Not (B))) (Or (C) (Not (B))))))
+(let $gamba-syntia-2-target (Xor (C) (B)))
+
+(let $gamba-syntia-9-source
+  (Sub (Xor (D) (C))
+       (Add (And (Not (D)) (C)) (And (Not (D)) (C)))))
+(let $gamba-syntia-9-target (Sub (D) (C)))
+
+(let $gamba-syntia-13-product
+  (Add (Mul (And (B) (D)) (Or (B) (D)))
+       (Mul (And (B) (Not (D))) (And (Not (B)) (D)))))
+(let $gamba-syntia-13-source
+  (Sub (Sub (D) $gamba-syntia-13-product)
+       (Add (Or (D) (Not $gamba-syntia-13-product))
+            (Or (D) (Not $gamba-syntia-13-product)))))
+(let $gamba-syntia-13-target (Xor (D) (Mul (B) (D))))
+
+(let $gamba-syntia-15-product
+  (Add (Mul (And (A) (C)) (Or (A) (C)))
+       (Mul (And (A) (Not (C))) (And (Not (A)) (C)))))
+(let $gamba-syntia-15-source
+  (Sub (Xor $gamba-syntia-15-product (C))
+       (Mul (And (Not $gamba-syntia-15-product) (C)) (Const 2))))
+(let $gamba-syntia-15-target (Sub (Mul (A) (C)) (C)))
+
+; GAMBA experiments/datasets/neureduce.txt, row 6.
+(let $gamba-neureduce-6-source
+  (Add
+    (Add
+      (Add
+        (Add
+          (Add
+            (Add
+              (Add
+                (Add
+                  (Mul (Const -7) (Xor (X) (Y)))
+                  (Mul (Const 10) (Or (Not (Y)) (Not (Z)))))
+                (Mul (Const -28) (Or (And (X) (Y)) (Not (Z)))))
+              (Mul (Const 3) (And (Xor (Not (X)) (Y)) (Z))))
+            (Mul (Const 27) (Or (Y) (Not (Z)))))
+          (Mul (Const -2) (Or (X) (Z))))
+        (Mul (Const -6) (Not (X))))
+      (Mul (Const -6) (And (X) (Xor (Y) (Z)))))
+    (Mul (Const -6) (Or (Not (X)) (And (Y) (Not (Z)))))))
+(let $gamba-neureduce-6-target
+  (Add (Mul (Const -7) (And (Not (X)) (Xor (Y) (Z))))
+       (Mul (Const -5) (And (X) (Xor (Y) (Z))))))

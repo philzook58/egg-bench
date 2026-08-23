@@ -1,0 +1,2 @@
+- <https://monoids.net/>
+- <https://gist.github.com/slavapestov/cd64b878935c0cbd5c831f9880d08a94>

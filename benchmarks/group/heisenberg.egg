@@ -1,0 +1,52 @@
+; A normal-form slice of KBMAG manual chapter 2, example 3 (the Heisenberg group).
+; It uses the presentation [y, x] = z and central z, with explicit inverse letters.
+(datatype G)
+(constructor id-const () G)
+(constructor x-const () G)
+(constructor x-inv-const () G)
+(constructor y-const () G)
+(constructor y-inv-const () G)
+(constructor z-const () G)
+(constructor z-inv-const () G)
+(constructor gmul (G G) G)
+(let $id (id-const))
+(let $x (x-const))
+(let $x-inv (x-inv-const))
+(let $y (y-const))
+(let $y-inv (y-inv-const))
+(let $z (z-const))
+(let $z-inv (z-inv-const))
+
+(rewrite (gmul (gmul p q) r) (gmul p (gmul q r)))
+; Free reductions for right-associated words.  Contextual rules avoid merging the
+; identity e-class with every cancellable pair during this larger workload.
+(rewrite (gmul $x (gmul $x-inv r)) r)
+(rewrite (gmul $x-inv (gmul $x r)) r)
+(rewrite (gmul $y (gmul $y-inv r)) r)
+(rewrite (gmul $y-inv (gmul $y r)) r)
+(rewrite (gmul $z (gmul $z-inv r)) r)
+(rewrite (gmul $z-inv (gmul $z r)) r)
+; Collect central z to the right, then collect y*x to x*y*z.
+(rewrite (gmul $z (gmul $x r)) (gmul $x (gmul $z r)))
+(rewrite (gmul $z (gmul $x-inv r)) (gmul $x-inv (gmul $z r)))
+(rewrite (gmul $z (gmul $y r)) (gmul $y (gmul $z r)))
+(rewrite (gmul $z (gmul $y-inv r)) (gmul $y-inv (gmul $z r)))
+(rewrite (gmul $z $x) (gmul $x $z))
+(rewrite (gmul $z $x-inv) (gmul $x-inv $z))
+(rewrite (gmul $z $y) (gmul $y $z))
+(rewrite (gmul $z $y-inv) (gmul $y-inv $z))
+(rewrite (gmul $y (gmul $x r)) (gmul $x (gmul $y (gmul $z r))))
+(rewrite (gmul $y $x) (gmul $x (gmul $y $z)))
+
+; The commutator and a longer word whose z must travel through inverse letters.
+(let $commutator (gmul (gmul (gmul $y $x) $y-inv) $x-inv))
+(let $shifted-commutator
+  (gmul (gmul (gmul (gmul (gmul $y $x) $y-inv) $x-inv) $z) $x))
+
+(relation solved ())
+(rule ((= $commutator $z)
+       (= $shifted-commutator (gmul $x (gmul $z $z))))
+      ((solved)))
+(run 100 :until (solved))
+(check (= $commutator $z))
+(check (= $shifted-commutator (gmul $x (gmul $z $z))))

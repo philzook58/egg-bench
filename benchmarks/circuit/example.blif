@@ -1,0 +1,9 @@
+.model simple
+.inputs a b c
+.outputs out
+.names a b n1
+11 1
+.names n1 c out
+1- 1
+-1 1
+.end

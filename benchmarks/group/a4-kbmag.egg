@@ -1,0 +1,37 @@
+; A_4, translated from KBMAG manual chapter 2, example 1.
+; Presentation: < a, b | a^2 = b^3 = (a*b)^3 = 1 >.
+; `b-inv` is the explicit alphabet symbol b^-1, as in KBMAG's group alphabet.
+(datatype G)
+(constructor id-const () G)
+(constructor a-const () G)
+(constructor b-const () G)
+(constructor b-inv-const () G)
+(constructor gmul (G G) G)
+(let $id (id-const))
+(let $a (a-const))
+(let $b (b-const))
+(let $b-inv (b-inv-const))
+
+; KBMAG's displayed confluent system, written with right-associated words.
+(rewrite (gmul (gmul x y) z) (gmul x (gmul y z)))
+(rewrite (gmul $a $a) $id)
+(rewrite (gmul $b $b) $b-inv)
+(rewrite (gmul $b $b-inv) $id)
+(rewrite (gmul $b-inv $b) $id)
+(rewrite (gmul $b-inv $b-inv) $b)
+(rewrite (gmul $b-inv (gmul $a $b-inv)) (gmul $a (gmul $b $a)))
+(rewrite (gmul $b (gmul $a $b)) (gmul $a (gmul $b-inv $a)))
+(rewrite (gmul $b-inv (gmul $a (gmul $b $a))) (gmul $b (gmul $a $b-inv)))
+(rewrite (gmul $a (gmul $b (gmul $a $b-inv))) (gmul $b-inv (gmul $a $b)))
+(rewrite (gmul $b (gmul $a (gmul $b-inv $a))) (gmul $b-inv (gmul $a $b)))
+(rewrite (gmul $a (gmul $b-inv (gmul $a $b))) (gmul $b (gmul $a $b-inv)))
+
+; The defining relator and a reduction that must use a completed rule first.
+(let $a-b-cubed
+  (gmul (gmul (gmul (gmul (gmul $a $b) $a) $b) $a) $b))
+(let $completed-peak
+  (gmul (gmul (gmul (gmul $b-inv $a) $b-inv) $b) $b-inv))
+
+(run 100 :until (= $a-b-cubed $id))
+(check (= $a-b-cubed $id))
+(check (= $completed-peak (gmul $a (gmul $b $a))))

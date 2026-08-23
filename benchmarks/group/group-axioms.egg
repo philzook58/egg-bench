@@ -1,0 +1,33 @@
+; Pure group-axiom reductions.  The rules orient associativity, identity, and
+; inverse elimination toward a right-associated word normal form.
+(datatype G)
+(constructor id-const () G)
+(constructor a-const () G)
+(constructor b-const () G)
+(constructor c-const () G)
+(constructor gmul (G G) G)
+(constructor ginv (G) G)
+(let $id (id-const))
+(let $a (a-const))
+(let $b (b-const))
+(let $c (c-const))
+
+; Group axioms.  No commutativity rule is present.
+(rewrite (gmul (gmul x y) z) (gmul x (gmul y z)))
+(rewrite (gmul $id x) x)
+(rewrite (gmul x $id) x)
+(rewrite (gmul x (ginv x)) $id)
+
+; Each problem deliberately hides cancellable pairs behind reassociation.
+(let $right-cancel (gmul (gmul $a $b) (ginv $b)))
+(let $middle-cancel (gmul (gmul $a (gmul $b (ginv $b))) $c))
+(let $conjugate-cancel
+  (gmul (gmul (gmul $a $b) (ginv $b)) (ginv $a)))
+(let $six-letter-word
+  (gmul (gmul (gmul (gmul (gmul $a $b) $c) (ginv $c)) (ginv $b)) (ginv $a)))
+
+(run 100 :until (= $six-letter-word $id))
+(check (= $right-cancel $a))
+(check (= $middle-cancel (gmul $a $c)))
+(check (= $conjugate-cancel $id))
+(check (= $six-letter-word $id))

@@ -11,6 +11,7 @@ Benchmarks can just be terms to be optimized in some reasonable machine or human
 # Table of Contents
 
 - lambda - problems involving reducing and modelling lambda binders. Untyped Lambda calculus and others
+- group - word-problem and normal-form workloads for group presentations
 - polynomial
 - bitvec
 - circuit
